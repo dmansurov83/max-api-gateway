@@ -82,17 +82,50 @@ shell_command:
   max_notify: "curl -X POST http://192.168.1.100:8000/send -H 'Authorization: ваш_api_token' -H 'Content-Type: application/json' -d '{\"chat_id\": -1234567890, \"text\": \"{{ message }}\"}'"
 ```
 
-### Вариант C: notify-сервис (правильный)
+### Вариант C: notify-сервис `notify.max` (правильный)
+
+Готовый кастомный компонент лежит в `custom_components/max_notify`. Скопируйте папку в `config/custom_components/` вашего Home Assistant и добавьте в `configuration.yaml`:
 
 ```yaml
 notify:
-  - name: max
-    platform: rest
-    method: POST
-    url: "http://192.168.1.100:8000/send"
-    headers:
-      Authorization: "ваш_api_token"
+  - platform: max_notify
+    name: max
+    url: "http://192.168.1.100:8000"
+    api_key: "ваш_api_token"
+    chat_id: -1234567890
 ```
+
+`chat_id` можно опустить — тогда он задаётся в самом запросе. После перезагрузки Home Assistant появится сервис `notify.max`:
+
+```yaml
+action:
+  - service: notify.max
+    data:
+      title: "Дом"
+      message: "Дверь открыта!"
+```
+
+**Отправка картинки** (например, снимок с камеры) — передайте путь к файлу в `image`:
+
+```yaml
+action:
+  - service: notify.max
+    data:
+      message: "Снимок с камеры"
+      image: "/config/www/snapshot.jpg"
+```
+
+`image` принимает и URL (`http://...` / `https://...`) — компонент сам скачает файл и отправит:
+
+```yaml
+action:
+  - service: notify.max
+    data:
+      message: "Снимок с камеры"
+      image: "http://192.168.1.50:8123/local/snapshot.jpg"
+```
+
+Файл уходит на `POST /upload` (multipart) как `file`, поддерживаются jpg/png/gif/webp.
 
 ## API
 
@@ -131,6 +164,23 @@ CMD ["/server"]
 docker build -t max-gateway .
 docker run -e MAX_TOKEN=... -e MAX_DEVICE_ID=... -e API_TOKEN=... -p 8000:8000 max-gateway
 ```
+
+### Сборка прямо из GitHub (docker compose)
+
+Compose умеет собирать образ прямо из git-репозитория — клонировать локально не нужно. Токены задаются через `.env` рядом с `docker-compose.yml`:
+
+```bash
+# .env
+MAX_TOKEN=ваш_токен
+MAX_DEVICE_ID=ваш_device_id
+API_TOKEN=секрет_для_http
+```
+
+```bash
+docker compose up -d --build
+```
+
+Compose-файл указывает на `https://github.com/dmansurov83/max-api-gateway.git#master` — при каждом `--build` Docker тянет свежий `master` из GitHub и собирает образ. Учтите: изменения попадут в сборку только после `git push`.
 
 ## Структура
 

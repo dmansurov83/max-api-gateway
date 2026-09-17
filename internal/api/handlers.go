@@ -71,7 +71,9 @@ func handleUpload(core *core.MaxCore) http.HandlerFunc {
 			return
 		}
 
-file, header, err := r.FormFile("file")
+		text := r.FormValue("text")
+
+		file, header, err := r.FormFile("file")
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(errorResponse{Error: "file is required"})
@@ -79,7 +81,7 @@ file, header, err := r.FormFile("file")
 		}
 		defer file.Close()
 
-		if err := core.SendFile(r.Context(), chatID, header.Filename, file); err != nil {
+		if err := core.SendFile(r.Context(), chatID, header.Filename, text, file); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			json.NewEncoder(w).Encode(errorResponse{Error: err.Error()})
 			return

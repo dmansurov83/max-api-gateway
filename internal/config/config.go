@@ -8,11 +8,11 @@ import (
 )
 
 type Config struct {
-	Port       int    `yaml:"port"`
-	MaxToken   string `yaml:"max_token"`
-	MaxDeviceID string `yaml:"max_device_id"`
-	APIToken   string `yaml:"api_token"`
-	DefaultChatID int64 `yaml:"default_chat_id"`
+	Port          int    `yaml:"port"`
+	MaxToken      string `yaml:"max_token"`
+	MaxDeviceID   string `yaml:"max_device_id"`
+	APIToken      string `yaml:"api_token"`
+	DefaultChatID int64  `yaml:"default_chat_id"`
 }
 
 func Load(path string) *Config {

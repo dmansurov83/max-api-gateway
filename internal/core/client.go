@@ -57,12 +57,12 @@ func (c *MaxCore) SendMessage(ctx context.Context, chatID int64, text string) er
 	return nil
 }
 
-func (c *MaxCore) SendFile(ctx context.Context, chatID int64, filename string, reader io.Reader) error {
+func (c *MaxCore) SendFile(ctx context.Context, chatID int64, filename string, text string, reader io.Reader) error {
 	attach, err := c.client.UploadPhoto(ctx, filename, reader)
 	if err != nil {
 		return fmt.Errorf("upload: %w", err)
 	}
-	_, err = c.client.SendMessage(ctx, chatID, "", maxclient.SendMessageOpts{
+	_, err = c.client.SendMessage(ctx, chatID, text, maxclient.SendMessageOpts{
 		Attaches: []maxclient.Attachment{*attach},
 	})
 	if err != nil {

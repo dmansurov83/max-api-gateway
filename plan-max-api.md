@@ -111,15 +111,25 @@ shell_command:
 
 ### Вариант C: notify-сервис (правильный)
 
+Встроенного REST-notify в Home Assistant нет — нужен кастомный компонент.
+Готовый: `custom_components/max_notify` (скопировать в `config/custom_components/`).
+
 ```yaml
-# Вспомогательный скрипт или add-on, регистрирующий notify-сервис
 notify:
-  - name: max
-    platform: rest
-    method: POST
-    url: "http://192.168.1.100:8000/send"
-    headers:
-      Authorization: "ваш_токен_доступа"
+  - platform: max_notify
+    name: max
+    url: "http://192.168.1.100:8000"
+    api_key: "ваш_токен_доступа"
+    chat_id: -1234567890
+```
+
+Использование:
+```yaml
+action:
+  - service: notify.max
+    data:
+      title: "Дом"
+      message: "Дверь открыта!"
 ```
 
 ### Рекомендация
