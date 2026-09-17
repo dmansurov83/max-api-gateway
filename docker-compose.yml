@@ -11,3 +11,5 @@ services:
       - MAX_DEVICE_ID=${MAX_DEVICE_ID}
       - API_TOKEN=${API_TOKEN:-my_secret_api_token}
       - PORT=8000
+    volumes:
+      - ./config.yaml:/config.yaml:ro
