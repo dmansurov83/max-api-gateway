@@ -167,6 +167,39 @@ docker build -t max-gateway .
 docker run -e MAX_TOKEN=... -e MAX_DEVICE_ID=... -e API_TOKEN=... -p 8000:8000 max-gateway
 ```
 
+### Запуск через Docker Hub (рекомендуется для сервера)
+
+Готовый публичный образ: `dmansurov83/max-gateway:latest` (Docker Hub).
+
+```yaml
+# docker-compose.yml
+services:
+  max-gateway:
+    image: dmansurov83/max-gateway:latest
+    container_name: max-gateway
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - MAX_TOKEN=${MAX_TOKEN}
+      - MAX_DEVICE_ID=${MAX_DEVICE_ID}
+      - API_TOKEN=${API_TOKEN:-my_secret_api_token}
+      - PORT=8000
+    volumes:
+      - ./config.yaml:/config.yaml:ro
+```
+
+```bash
+# .env (рядом с docker-compose.yml)
+MAX_TOKEN=ваш_токен
+MAX_DEVICE_ID=ваш_device_id
+API_TOKEN=секрет_для_http
+```
+
+```bash
+docker compose up -d
+```
+
 ### Сборка прямо из GitHub (docker compose)
 
 Compose умеет собирать образ прямо из git-репозитория — клонировать локально не нужно. Токены задаются через `.env` рядом с `docker-compose.yml`:

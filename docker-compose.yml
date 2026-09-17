@@ -1,7 +1,6 @@
 services:
   max-gateway:
-    build: https://github.com/dmansurov83/max-api-gateway.git#master
-    image: max-gateway:latest
+    image: dmansurov83/max-gateway:latest
     container_name: max-gateway
     restart: unless-stopped
     ports:

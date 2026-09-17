@@ -1,0 +1,14 @@
+.git
+.gigatool
+build
+*.exe
+config.yaml
+config.local.yaml
+.env
+.env.local
+docker-compose.yml
+README.md
+plan-max-api.md
+custom_components
+qr.png
+__pycache__
